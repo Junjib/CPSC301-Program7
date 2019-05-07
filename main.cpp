@@ -1,12 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include "LinkedStack.h"
 
 using namespace std;
 
 int main()
 {
-  char data;
+  string data;
   bool pushData, popData, empty;
   LinkedStack<char> myStack;
   ifstream readFile;
@@ -14,8 +15,44 @@ int main()
 
   while(!readFile.eof())
   {
-    readFile.get(data);
-    if(data == '(' || data == '{' || data == '[')
+    getline(readFile, data);
+    for(int i = 0; i < data.length(); i++)
+    {
+      if(data[i] == '(' || data[i] == '{' || data[i] == '[')
+      {
+        pushData = myStack.push(data[i]);
+      }
+      if(data[i] == ')' || data[i] == '}' || data[i] == ']')
+      {
+        if(myStack.peek() == '(' && data[i] == ')')
+        {
+          popData = myStack.pop();
+        }
+        else if(myStack.peek() == '{' && data[i] == '}')
+        {
+          popData = myStack.pop();
+        }
+        else if(myStack.peek() == '[' && data[i] == ']')
+        {
+          popData = myStack.pop();
+        }
+        else if(myStack.peek() != data[i])
+        {
+          break;
+        }
+      }
+    }
+      empty = myStack.isEmpty();
+      if(empty)
+      {
+        cout << "Expression is valid\n\n";
+      }
+      else if(!empty)
+      {
+        cout << "Expression is invalid\n\n";
+        myStack.~LinkedStack();
+      }
+    /*if(data == '(' || data == '{' || data == '[')
     {
       pushData = myStack.push(data);
     }
@@ -56,7 +93,7 @@ int main()
           cout << "success\n";
         }
       }
-    }
+    }*/
   }
   readFile.close();
     /*// Demo code
